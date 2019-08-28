@@ -103,19 +103,6 @@ function startSignaling(room = "myroom") {
 	}, logError);
 			  
 }
-
-// function sendLocalDesc(desc, room) {
-// 	// console.log("has room?" + room);
-// 	rtcPeerConn.setLocalDescription(desc, function () {
-// 		console.log("sending local description");
-// 		socket.emit('signal', {
-//             "signal_type":"signaling",
-//             "command":"SDP",
-//             "room": "myroom",
-//             "user_data": JSON.stringify({ 'sdp': rtcPeerConn.localDescription })
-//         });
-// 	}, logError);
-// }
 			
 function logError(error) {
     // console.log('ERROR:' +  error)

@@ -3,7 +3,6 @@ const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
 const Filter = require('bad-words');
-const RTCMultiConnectionServer = require('rtcmulticonnection-server');
 const { generateMessage, generateLocationMessage } = require('./utils/messages');
 const { addUser, removeUser, getUser, getUsersInRoom} = require('./utils/users'); 
 
@@ -48,7 +47,7 @@ io.on('connection', (socket) => {
 
     socket.on('sendMessage', (msg, callback) => {
         const filter = new Filter();
-        const user = getUser(socket.id);
+        let user = getUser(socket.id);
         if (filter.isProfane(msg)) {
             return callback('Profanity is not allowed!');
         }
@@ -57,7 +56,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('disconnect', () => {
-        const user = removeUser(socket.id);
+        let user = removeUser(socket.id);
         
         if (user) {
             io.to(user.room).emit(
@@ -73,7 +72,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('sendLocation', (coords, callback) => {
-        const user = getUser(socket.id);
+        let user = getUser(socket.id);
         io.to(user.room).emit('locationMessage',
             generateLocationMessage(
                 'https://google.com/maps?q=' + coords.latitude + ',' + coords.longitude,
@@ -97,7 +96,11 @@ io.on('connection', (socket) => {
 
     socket.on('vid_join', (data) => {
         socket.join(data.room);
-        socket.broadcast.emit('accept_join', data);
+        let user = getUser(socket.id);
+        socket.broadcast.emit('accept_join', {
+            room: data.room,
+            name: user.username
+        });
     });
 
 

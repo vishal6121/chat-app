@@ -134,13 +134,11 @@ socket.on('accept_join', (data) => {
 
     if (!isInitiator) {
         console.log('accepting');
-        if (!rtcPeerConn) startSignaling(data.room);
+        if (!rtcPeerConn) {
+            if (confirm(data.name + " is calling, do you want to connect?")) {
+                startSignaling(data.room);
+            }
+        }
     }
 
 });
-
-// $acceptBtn.addEventListener('click', (e) => {
-    
-//     console.log('accepting');
-//     if (!rtcPeerConn) startSignaling("myroom");
-// });
